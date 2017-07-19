@@ -1,7 +1,7 @@
-package com.pageobject;
+package com.test.pageobject;
 
 import com.entity.Data;
-import com.utils.waitutils.WaitUtils;
+import com.test.waitutils.WaitUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

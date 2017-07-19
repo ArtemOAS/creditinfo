@@ -1,11 +1,9 @@
-package com.steps;
+package com.test.steps;
 
-import com.pageobject.MoneymanPage;
-import com.webdriver.WebDriverFactory;
+import com.test.pageobject.MoneymanPage;
+import com.test.webdriver.WebDriverFactory;
 import org.apache.log4j.Logger;
 import org.testng.annotations.Test;
-
-import java.io.File;
 
 /**
  * Created by Artem on 10.05.2017.

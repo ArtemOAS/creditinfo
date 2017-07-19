@@ -8,7 +8,7 @@
             </run>
         </groups>
         <classes>
-            <class name="com.steps.MoneymanSteps" />
+            <class name="com.test.steps.MoneymanSteps" />
         </classes>
     </test>
 </suite>

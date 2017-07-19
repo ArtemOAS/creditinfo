@@ -1,4 +1,4 @@
-package com.webdriver;
+package com.test.webdriver;
 
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;

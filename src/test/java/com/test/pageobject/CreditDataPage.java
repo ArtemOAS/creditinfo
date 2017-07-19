@@ -1,4 +1,4 @@
-package com.pageobject;
+package com.test.pageobject;
 
 /**
  * Created by Artem on 10.05.2017.

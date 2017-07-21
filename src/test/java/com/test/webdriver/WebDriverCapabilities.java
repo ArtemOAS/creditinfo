@@ -11,10 +11,10 @@ import java.util.Map;
  */
 public class WebDriverCapabilities {
 
-    protected WebDriver driver;
-    protected DesiredCapabilities capabilities;
+    protected static WebDriver driver;
+    protected static DesiredCapabilities capabilities;
 
-    public Map<String, WebDriverProcess> webDriverMap() {
+    public static Map<String, WebDriverProcess> webDriverMap() {
         return new HashMap<String, WebDriverProcess>() {{
 
             put(WebDriverName.FIREFOX.name(), nameDriver -> {

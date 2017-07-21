@@ -1,14 +1,16 @@
 package com.test.webdriver;
 
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeTest;
 import ru.stqa.selenium.factory.WebDriverPool;
 
 import java.util.concurrent.TimeUnit;
 
 public class WebDriverFactory extends WebDriverCapabilities {
 
-    @BeforeMethod
+    @BeforeTest
     public void setUp(){
         System.setProperty("webdriver.gecko.driver", "src/main/resources/drivers/geckodriver.exe");
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
@@ -20,7 +22,7 @@ public class WebDriverFactory extends WebDriverCapabilities {
         driver.manage().deleteAllCookies();
     }
 
-    @AfterMethod
+    @AfterTest
     public void closeDriver(){
         if (driver != null && !driver.getWindowHandles().isEmpty()){
             WebDriverPool.DEFAULT.dismissAll();

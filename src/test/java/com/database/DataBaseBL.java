@@ -1,5 +1,7 @@
 package com.database;
 
+import org.testng.Assert;
+
 import java.sql.*;
 
 /**
@@ -29,7 +31,7 @@ public class DataBaseBL {
         try {
             stmt = connect(
                     "com.mysql.jdbc.Driver",
-                    "jdbc:mysql://localhost:3306/creditinfo",
+                    "jdbc:mysql://localhost:3306/creditinfo?serverTimezone=UTC",
                     "root",
                     "admin"
                     ).createStatement();
@@ -57,6 +59,41 @@ public class DataBaseBL {
                     e.printStackTrace();
                 }
             }
+            if (stmt != null){
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null){
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public StringBuilder update(String sqlRequest){
+        StringBuilder stringBuilder = null;
+        try {
+            stmt = connect(
+                    "com.mysql.jdbc.Driver",
+                    "jdbc:mysql://localhost:3306/creditinfo?serverTimezone=UTC",
+                    "root",
+                    "admin"
+            ).createStatement();
+            int count = stmt.executeUpdate(sqlRequest);
+            Assert.assertEquals(1, count, "update db error");
+            stmt.close();
+            connection.close();
+            return stringBuilder;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return stringBuilder;
+        }finally {
             if (stmt != null){
                 try {
                     stmt.close();

@@ -16,7 +16,7 @@ public class MoneymanSteps extends WebDriverFactory{
 
         MoneymanPage moneymanPage = new MoneymanPage(driver);
         logger.info("https://moneyman.ru/");
-//        driver.get("https://moneyman.ru/");
+        driver.get("https://moneyman.ru/");
         moneymanPage.saveSum();
 
 

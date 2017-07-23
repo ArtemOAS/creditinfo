@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by Artem on 15.07.2017.
  */
-@Repository
+@Repository("creditInfoRepo")
 public class CreditInfoDaoImpl implements CreditInfoDao {
     @PersistenceContext
     private EntityManager entityManager;

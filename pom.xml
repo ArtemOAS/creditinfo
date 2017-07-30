@@ -7,9 +7,12 @@
     <groupId>creditinfo</groupId>
     <artifactId>creditinfo</artifactId>
     <version>1.0</version>
+    <packaging>jar</packaging>
 
     <properties>
         <version.spring_boot>1.5.4.RELEASE</version.spring_boot>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
@@ -76,17 +79,6 @@
             <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>jquery</artifactId>
-            <version>2.2.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>bootstrap</artifactId>
-            <version>3.3.7</version>
-        </dependency>
 
     </dependencies>
 

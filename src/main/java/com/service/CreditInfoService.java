@@ -5,6 +5,8 @@ import com.dao.impl.CreditInfoDaoImpl;
 import com.entity.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,17 @@ public class CreditInfoService implements CreditInfoDao{
 
     @Override
     public List<Data> findAll() {
-        return creditInfo.findAll();
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> creditInfoForm() {
+        List<Data> dataList = creditInfo.findAll();
+
+        if(dataList!=null){
+            return new ResponseEntity<>(dataList, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(dataList, HttpStatus.BAD_REQUEST);
+        }
     }
 }

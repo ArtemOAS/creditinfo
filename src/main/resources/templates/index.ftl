@@ -1,32 +1,38 @@
 <!DOCTYPE HTML>
-<html ng-app="app">
+<html>
 <head>
-    <title>Credit</title>
+    <meta charset="utf-8" />
+    <title>Spring Boot + JPA + Datatables</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript" src="/js/main.js"></script>
 </head>
 
-<body ng-controller="appCtrl">
-<div id="credit_block">
+<h1>Info about credit</h1>
+<table id="employeesTable" class="display">
 
-    <div id="logotype">Подбор онлайн займа</div>
+    <!-- Header Table -->
+    <thead>
+    <tr>
+        <th>sum_credit</th>
+        <th>period_credit</th>
+        <th>percent_sum</th>
+    </tr>
+    </thead>
+    <!-- Footer Table -->
+    <tfoot>
+    <tr>
+        <th>sum_credit</th>
+        <th>period_credit</th>
+        <th>percent_sum</th>
+    </tr>
+    </tfoot>
+</table>
 
-    <form id="search">
-
-        <div id="sum" class="sumCreditClient">
-
-            <h4>Сумма:</h4>
-
-        </div>
-
-        <div id="period" class="periodCreditClient">
-
-            <h4>Срок:</h4>
-
-        </div>
-
-    </form>
-
-</div>
-</body>
 </html>
 
 

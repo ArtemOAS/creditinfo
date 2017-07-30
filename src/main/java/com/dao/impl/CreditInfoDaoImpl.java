@@ -4,6 +4,7 @@ import com.dao.CreditInfoDao;
 import com.entity.Data;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -21,5 +22,10 @@ public class CreditInfoDaoImpl implements CreditInfoDao {
     @Override
     public List<Data> findAll() {
         return entityManager.createNamedQuery("Data.getdAll", Data.class).getResultList();
+    }
+
+    @Override
+    public ResponseEntity<?> creditInfoForm() {
+        return null;
     }
 }

@@ -3,6 +3,7 @@ package com.dao;
 import com.entity.Data;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.Repository;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -11,4 +12,5 @@ import java.util.List;
  */
 public interface CreditInfoDao extends Repository<Data, Long> {
     List<Data> findAll();
+    ResponseEntity<?> creditInfoForm();
 }

@@ -13,22 +13,24 @@
 </head>
 
 <h1>Info about credit</h1>
-<table id="employeesTable" class="display">
+<table id="employeesTable" class="display" >
 
     <!-- Header Table -->
     <thead>
     <tr>
-        <th>sum_credit</th>
-        <th>period_credit</th>
-        <th>percent_sum</th>
+        <th>Компания</th>
+        <th>Сумма кредита</th>
+        <th>Период кредита</th>
+        <th>Процент от суммы</th>
     </tr>
     </thead>
     <!-- Footer Table -->
     <tfoot>
     <tr>
-        <th>sum_credit</th>
-        <th>period_credit</th>
-        <th>percent_sum</th>
+        <th>Компания</th>
+        <th>Сумма кредита</th>
+        <th>Период кредита</th>
+        <th>Процент от суммы</th>
     </tr>
     </tfoot>
 </table>

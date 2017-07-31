@@ -9,7 +9,7 @@
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="OpenJPA" />
         <datasource-mapping>
-          <factory-entry name="Entities" value="f37d0fda-33d2-424b-a566-6df606092124" />
+          <factory-entry name="Entities" value="d8ca1208-d51c-4c74-b65d-e2e3f1783d14" />
         </datasource-mapping>
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/META-INF/persistence.xml" />
       </configuration>

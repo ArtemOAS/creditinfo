@@ -14,6 +14,8 @@ public class Data {
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private String id;
 
+    @Column(name = "name_company")
+    private String nameCompany;
     @Column(name = "sum_credit")
     private String sumCredit;
     @Column(name = "period_credit")
@@ -26,6 +28,14 @@ public class Data {
     }
 
     public Data() {
+    }
+
+    public String getNameCompany() {
+        return nameCompany;
+    }
+
+    public void setNameCompany(String nameCompany) {
+        this.nameCompany = nameCompany;
     }
 
     public String getSumCredit() {

@@ -4,6 +4,7 @@ $(document).ready( function () {
         "sAjaxDataProp": "",
         "order": [[ 0, "asc" ]],
         "aoColumns": [
+            { "mData": "nameCompany" },
             { "mData": "sumCredit" },
             { "mData": "periodCredit" },
             { "mData": "percentSum" },

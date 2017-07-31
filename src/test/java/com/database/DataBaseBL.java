@@ -1,5 +1,7 @@
 package com.database;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.StringUtils;
 import org.testng.Assert;
 
 import java.sql.*;
@@ -81,9 +83,9 @@ public class DataBaseBL {
         try {
             stmt = connect(
                     "com.mysql.jdbc.Driver",
-                    "jdbc:mysql://localhost:3306/creditinfo?serverTimezone=UTC",
-                    "root",
-                    "admin"
+                    "jdbc:mysql://vinnik.beget.tech:3306/vinnik_credit?serverTimezone=UTC",
+                    decode("dmlubmlrX2NyZWRpdA=="),
+                    decode("dmlubmlrX2NyZWRpdA==")
             ).createStatement();
             int count = stmt.executeUpdate(sqlRequest);
             Assert.assertEquals(1, count, "update db error");
@@ -109,5 +111,9 @@ public class DataBaseBL {
                 }
             }
         }
+    }
+
+    private static String decode(String data) {
+        return StringUtils.newStringUtf8(Base64.decodeBase64(data));
     }
 }

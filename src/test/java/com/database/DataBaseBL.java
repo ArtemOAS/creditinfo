@@ -33,9 +33,9 @@ public class DataBaseBL {
         try {
             stmt = connect(
                     "com.mysql.jdbc.Driver",
-                    "jdbc:mysql://localhost:3306/creditinfo?serverTimezone=UTC",
-                    "root",
-                    "admin"
+                    "jjdbc:mysql://vinnik.beget.tech:3306/vinnik_credit?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
+                    "vinnik_credit",
+                    "vinnik_credit"
                     ).createStatement();
             rs = stmt.executeQuery(sqlRequest);
             int count = 0;
@@ -83,9 +83,9 @@ public class DataBaseBL {
         try {
             stmt = connect(
                     "com.mysql.jdbc.Driver",
-                    "jdbc:mysql://vinnik.beget.tech:3306/vinnik_credit?serverTimezone=UTC",
-                    decode("dmlubmlrX2NyZWRpdA=="),
-                    decode("dmlubmlrX2NyZWRpdA==")
+                    "jdbc:mysql://vinnik.beget.tech:3306/vinnik_credit?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
+                    "vinnik_credit",
+                    "vinnik_credit"
             ).createStatement();
             int count = stmt.executeUpdate(sqlRequest);
             Assert.assertEquals(1, count, "update db error");

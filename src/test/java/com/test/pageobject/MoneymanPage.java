@@ -1,7 +1,6 @@
 package com.test.pageobject;
 
 import com.database.DataBaseBL;
-import com.entity.Data;
 import com.test.waitutils.WaitUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,7 +8,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,9 +62,13 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
 
                 dataBaseBL.update(
                         String.format(
-                                "INSERT INTO creditinfo.creditinfo " +
-                                        "(sum_credit, period_credit, percent_sum) VALUE ('%s','%s','%s');",
-                                sum.getAttribute("value"), period.getAttribute("value"), infoAboutCredit.get(2).getText().replace(" ", "")));
+                                "INSERT INTO vinnik_credit.creditinfo " +
+                                        "(name_company, sum_credit, period_credit, old_percent_sum) VALUE ('%s', '%s','%s','%s');",
+                                driver.getCurrentUrl().replace("https:", "").replace(".ru", "").replaceAll("/",""),
+                                sum.getAttribute("value"),
+                                period.getAttribute("value"),
+                                infoAboutCredit.get(2).getText().replace(" ", ""))
+                );
             }
 
         }
@@ -88,8 +90,9 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
 
                 dataBaseBL.update(
                         String.format(
-                                "INSERT INTO creditinfo.creditinfo " +
-                                        "(sum_credit, period_credit, percent_sum) VALUE ('%s','%s','%s');",
+                                "INSERT INTO vinnik_credit.creditinfo " +
+                                        "(name_company, sum_credit, period_credit, old_percent_sum) VALUE ('%s',%s','%s','%s');",
+                                driver.getCurrentUrl().replace("https:", "").replace(".ru", "").replaceAll("/",""),
                                 sum.getAttribute("value"), period.getAttribute("value"), String.valueOf(res)));
             }
         }

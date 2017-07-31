@@ -20,8 +20,12 @@ public class Data {
     private String sumCredit;
     @Column(name = "period_credit")
     private String periodCredit;
-    @Column(name = "percent_sum")
-    private String percentSum;
+    @Column(name = "old_percent_sum")
+    private String oldPercentSum;
+    @Column(name = "new_percent_sum")
+    private String newPercentSum;
+    @Column(name = "difference_percent_sum")
+    private String differencePercentSum;
 
     public Data(Consumer<Data> data) {
         data.accept(this);
@@ -54,12 +58,28 @@ public class Data {
         this.periodCredit = periodCredit;
     }
 
-    public String getPercentSum() {
-        return percentSum;
+    public String getOldPercentSum() {
+        return oldPercentSum;
     }
 
-    public void setPercentSum(String percentSum) {
-        this.percentSum = percentSum;
+    public void setOldPercentSum(String percentSum) {
+        this.oldPercentSum = percentSum;
+    }
+
+    public String getNewPercentSum() {
+        return newPercentSum;
+    }
+
+    public void setNewPercentSum(String newPercentSum) {
+        this.newPercentSum = newPercentSum;
+    }
+
+    public String getDifferencePercentSum() {
+        return differencePercentSum;
+    }
+
+    public void setDifferencePercentSum(String differencePercentSum) {
+        this.differencePercentSum = differencePercentSum;
     }
 
     @Override
@@ -69,16 +89,26 @@ public class Data {
 
         Data data = (Data) o;
 
+        if (id != null ? !id.equals(data.id) : data.id != null) return false;
+        if (nameCompany != null ? !nameCompany.equals(data.nameCompany) : data.nameCompany != null) return false;
         if (sumCredit != null ? !sumCredit.equals(data.sumCredit) : data.sumCredit != null) return false;
         if (periodCredit != null ? !periodCredit.equals(data.periodCredit) : data.periodCredit != null) return false;
-        return percentSum != null ? percentSum.equals(data.percentSum) : data.percentSum == null;
+        if (oldPercentSum != null ? !oldPercentSum.equals(data.oldPercentSum) : data.oldPercentSum != null)
+            return false;
+        if (newPercentSum != null ? !newPercentSum.equals(data.newPercentSum) : data.newPercentSum != null)
+            return false;
+        return differencePercentSum != null ? differencePercentSum.equals(data.differencePercentSum) : data.differencePercentSum == null;
     }
 
     @Override
     public int hashCode() {
-        int result = sumCredit != null ? sumCredit.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (nameCompany != null ? nameCompany.hashCode() : 0);
+        result = 31 * result + (sumCredit != null ? sumCredit.hashCode() : 0);
         result = 31 * result + (periodCredit != null ? periodCredit.hashCode() : 0);
-        result = 31 * result + (percentSum != null ? percentSum.hashCode() : 0);
+        result = 31 * result + (oldPercentSum != null ? oldPercentSum.hashCode() : 0);
+        result = 31 * result + (newPercentSum != null ? newPercentSum.hashCode() : 0);
+        result = 31 * result + (differencePercentSum != null ? differencePercentSum.hashCode() : 0);
         return result;
     }
 }

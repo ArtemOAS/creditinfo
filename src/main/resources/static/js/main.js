@@ -7,7 +7,10 @@ $(document).ready( function () {
             { "mData": "nameCompany" },
             { "mData": "sumCredit" },
             { "mData": "periodCredit" },
-            { "mData": "percentSum" },
+            { "mData": "oldPercentSum" },
+            { "mData": "newPercentSum" },
+            { "mData": "differencePercentSum" },
+
         ]
     })
 });

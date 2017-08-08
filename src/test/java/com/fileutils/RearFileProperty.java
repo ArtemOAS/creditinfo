@@ -11,7 +11,7 @@ import java.util.Properties;
  */
 public class RearFileProperty {
     private static final Logger LOGGER = Logger.getLogger(RearFileProperty.class);
-    private static String applicationSpringPropertyURL = "application.properties";
+    private static String applicationSpringPropertyURL = "src/main/resources/application.properties";
 
     private static volatile RearFileProperty rearFilePropertyInstance;
 

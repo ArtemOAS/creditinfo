@@ -1,31 +1,25 @@
 package com.database;
 
 import com.entity.Data;
-import com.fileutils.RearFileProperty;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.sql.DriverManager.*;
 
 /**
  * Created by Artem on 19.07.2017.
  */
+
 public class DataBaseBL extends ConnectDataBase{
 
-    private RearFileProperty rearFileProperty = RearFileProperty.getInstance();
-
+    @Transactional
     public List<Data> response(String sqlRequest) {
         List<Data> dataList = new ArrayList<>();
-        try (Connection connection = this.connect(
-                rearFileProperty.driverDB,
-                rearFileProperty.urlDB,
-                rearFileProperty.userDB,
-                rearFileProperty.passwordDB
-        );
+        try (Connection connection = this.connection;
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sqlRequest);
         ) {
@@ -49,15 +43,11 @@ public class DataBaseBL extends ConnectDataBase{
         }
     }
 
+    @Transactional
     public List<Data> responseCompanyData(String sqlRequest) {
         List<Data> dataList = new ArrayList<>();
         try (
-                Connection connection = this.connect(
-                        rearFileProperty.driverDB,
-                        rearFileProperty.urlDB,
-                        rearFileProperty.userDB,
-                        rearFileProperty.passwordDB
-                );
+                Connection connection = this.connection;
                 Statement stmt = connection.createStatement();
                 ResultSet rs = stmt.executeQuery(sqlRequest);
         ) {
@@ -72,9 +62,6 @@ public class DataBaseBL extends ConnectDataBase{
                     }
                 }));
             }
-            rs.close();
-            stmt.close();
-            connection.close();
             return dataList;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -82,14 +69,10 @@ public class DataBaseBL extends ConnectDataBase{
         }
     }
 
+    @Transactional
     public void update(String sqlRequest) {
         try (
-                Connection connection = this.connect(
-                        rearFileProperty.driverDB,
-                        rearFileProperty.urlDB,
-                        rearFileProperty.userDB,
-                        rearFileProperty.passwordDB
-                );
+                Connection connection = this.connection;
                 Statement stmt = connection.createStatement();
         ) {
 

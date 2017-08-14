@@ -1,84 +1,66 @@
 package com.database;
 
+import com.dao.CreditInfoDao;
 import com.entity.Data;
-import org.springframework.transaction.annotation.Transactional;
+import com.fileutils.RearFileProperty;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
+
 
 /**
  * Created by Artem on 19.07.2017.
  */
 
-public class DataBaseBL extends ConnectDataBase{
+@Repository("bl")
+public class DataBaseBL implements CreditInfoDao {
 
-    @Transactional
-    public List<Data> response(String sqlRequest) {
-        List<Data> dataList = new ArrayList<>();
-        try (Connection connection = this.connection;
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sqlRequest);
-        ) {
+    @PersistenceContext
+    private EntityManager entityManager;
 
-            while (rs.next()) {
-                dataList.add(new Data(d -> {
-                    try {
-                        d.setNameCompany(rs.getString("name_company"));
-                        d.setSumCredit(rs.getString("sum_credit"));
-                        d.setPeriodCredit(rs.getString("period_credit"));
-                        d.setOldPercentSum(rs.getString("old_percent_sum"));
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }));
-            }
-            return dataList;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return dataList;
-        }
+    @Override
+    public List<Data> findAll() {
+        return entityManager.createNamedQuery("Data.getdAll", Data.class).getResultList();
     }
 
-    @Transactional
-    public List<Data> responseCompanyData(String sqlRequest) {
-        List<Data> dataList = new ArrayList<>();
-        try (
-                Connection connection = this.connection;
-                Statement stmt = connection.createStatement();
-                ResultSet rs = stmt.executeQuery(sqlRequest);
-        ) {
-            while (rs.next()) {
-                dataList.add(new Data(d -> {
-                    try {
-                        d.setNameCompany(rs.getString("name_company"));
-                        d.setSumCredit(rs.getString("sum_credit"));
-                        d.setPeriodCredit(rs.getString("period_credit"));
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                }));
-            }
-            return dataList;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return dataList;
-        }
+    @Override
+    public ResponseEntity<?> creditInfoForm() {
+        return null;
     }
 
-    @Transactional
-    public void update(String sqlRequest) {
-        try (
-                Connection connection = this.connection;
-                Statement stmt = connection.createStatement();
-        ) {
+    @Override
+    public void addNewData(Data data) {
+        entityManager.persist(data);
+    }
 
-            stmt.executeUpdate(sqlRequest);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void updateDataCredit(Data data) {
+        entityManager.merge(data);
+    }
+
+    @Override
+    public List<Data> findDataCredit(Data data) {
+        return entityManager.createQuery(
+                "SELECT c FROM Data c WHERE " +
+                        "c.nameCompany = ?1 and " +
+                        "c.sumCredit = ?2 and " +
+                        "c.periodCredit = ?3")
+                .setParameter(1,data.getNameCompany())
+                .setParameter(2,data.getSumCredit())
+                .setParameter(3,data.getPeriodCredit())
+                .getResultList();
+    }
+
+    @Override
+    public void updateDataNewPercentSum(Data data) {
+
+    }
+
+    @Override
+    public void updateDataDiffSum(Data data) {
+
     }
 }

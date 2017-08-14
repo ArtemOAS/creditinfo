@@ -46,11 +46,9 @@ public class RearFileProperty {
     public static RearFileProperty getInstance() {
         RearFileProperty localInstance = rearFilePropertyInstance;
         if (localInstance == null) {
-            synchronized (RearFileProperty.class) {
-                localInstance = rearFilePropertyInstance;
-                if (localInstance == null) {
-                    rearFilePropertyInstance = localInstance = new RearFileProperty();
-                }
+            localInstance = rearFilePropertyInstance;
+            if (localInstance == null) {
+                rearFilePropertyInstance = localInstance = new RearFileProperty();
             }
         }
         return localInstance;

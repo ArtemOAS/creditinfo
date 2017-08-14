@@ -43,7 +43,6 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
 
     @Override
     public void saveSum() {
-        String requestSelectAll = "select * from creditinfo";
 
         int maxSum = 30000;
         int maxPeriod = 30;
@@ -75,7 +74,7 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
                     d.setPeriodCredit(period.getAttribute("value"));
                 });
 
-                writeDataToDB(data, dataCompany, requestSelectAll);
+                writeDataToDB(data, dataCompany);
             }
         }
 
@@ -107,51 +106,47 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
                     d.setPeriodCredit(period.getAttribute("value"));
                 });
 
-                writeDataToDB(data, dataCompany, requestSelectAll);
+                writeDataToDB(data, dataCompany);
             }
         }
 
     }
 
-    private void writeDataToDB(Data data, Data dataCompany, String requestSelectAll){
-        if (!dataBaseBL.response(requestSelectAll).isEmpty()
-                &&!dataBaseBL.response(requestSelectAll).contains(data)) {
+    private void writeDataToDB(Data data, Data dataCompany){
+        if (!dataBaseBL.findAll().contains(data)){
+            dataBaseBL.addNewData(data);
+        }
+        if (!dataBaseBL.findAll().isEmpty() && dataBaseBL.findAll().contains(dataCompany)
+                &&!dataBaseBL.findAll().contains(data)) {
 
-            for (Data dataRes : dataBaseBL.response(requestSelectAll)) {
-                if (dataRes.getOldPercentSum() != null && !dataRes.getOldPercentSum().equals(data.getOldPercentSum())) {
-                    dataBaseBL.update(
-                            String.format(
-                                    "UPDATE vinnik_credit.creditinfo " +
-                                            "SET new_percent_sum ='%s' where name_company = '%s' and sum_credit = '%s' and period_credit = '%s';",
-                                    data.getOldPercentSum(), data.getNameCompany(), data.getSumCredit(), data.getPeriodCredit()
-                            )
-                    );
-                    int differencePercentsum =
-                            Integer.parseInt(dataRes.getOldPercentSum())
-                                    - Integer.parseInt(data.getOldPercentSum());
-                    dataBaseBL.update(
-                            String.format(
-                                    "UPDATE vinnik_credit.creditinfo " +
-                                            "SET difference_percent_sum = '%s' where name_company = '%s' and sum_credit = '%s' and period_credit = '%s';",
-                                    String.valueOf(differencePercentsum), data.getNameCompany(), data.getSumCredit(), data.getPeriodCredit())
-                    );
+            for (Data dataRes : dataBaseBL.findAll()) {
+                String res = dataRes.getOldPercentSum()+1000;
+                if (dataRes.getOldPercentSum() != null && !res.equals(data.getOldPercentSum())) {
+                    dataBaseBL.updateDataCredit(data);
+
+                    int differencePercentsum=0;
+                    if (Integer.parseInt(dataRes.getOldPercentSum())
+                            > Integer.parseInt(data.getOldPercentSum())) {
+                        differencePercentsum =
+                                Integer.parseInt(dataRes.getOldPercentSum())
+                                        - Integer.parseInt(data.getOldPercentSum());
+                    }else {
+                        differencePercentsum =
+                                Integer.parseInt(data.getOldPercentSum())
+                                        - Integer.parseInt(dataRes.getOldPercentSum());
+                    }
+
+                    int finalDifferencePercentsum = differencePercentsum;
+                    dataBaseBL.updateDataCredit(new Data(d -> {
+                        d.setDifferencePercentSum(String.valueOf(finalDifferencePercentsum));
+                        d.setNameCompany(data.getNameCompany());
+                        d.setSumCredit(data.getSumCredit());
+                        d.setPeriodCredit(data.getPeriodCredit());
+                    }));
                 }
             }
-            if (!dataBaseBL.response(requestSelectAll).contains(data)){
-                dataBaseBL.update(
-                        String.format(
-                                "INSERT INTO vinnik_credit.creditinfo " +
-                                        "(name_company, sum_credit, period_credit, old_percent_sum) VALUE ('%s', '%s','%s','%s');",
-                                data.getNameCompany(),
-                                data.getSumCredit(),
-                                data.getPeriodCredit(),
-                                data.getOldPercentSum()
-                        )
-                );
-            }
-
         } else {
-            for (Data dataCompanyRes : dataBaseBL.responseCompanyData(requestSelectAll)) {
+            for (Data dataCompanyRes : dataBaseBL.findDataCredit(dataCompany)) {
                 if (dataCompanyRes != null && dataCompanyRes.equals(dataCompany)) {
                     dataBaseBL.update(
                             String.format(

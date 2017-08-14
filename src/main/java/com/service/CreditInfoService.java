@@ -38,4 +38,29 @@ public class CreditInfoService implements CreditInfoDao{
             return new ResponseEntity<>(dataList, HttpStatus.BAD_REQUEST);
         }
     }
+
+    @Override
+    public void addNewData(Data data) {
+
+    }
+
+    @Override
+    public void updateDataCredit(Data data) {
+
+    }
+
+    @Override
+    public List<Data> findDataCredit(Data data) {
+        return null;
+    }
+
+    @Override
+    public void updateDataNewPercentSum(Data data) {
+
+    }
+
+    @Override
+    public void updateDataDiffSum(Data data) {
+
+    }
 }

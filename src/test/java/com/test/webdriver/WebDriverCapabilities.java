@@ -2,6 +2,7 @@ package com.test.webdriver;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,12 +10,12 @@ import java.util.Map;
 /**
  * Created by Artem on 10.05.2017.
  */
+@Service
 public class WebDriverCapabilities {
 
-    protected static WebDriver driver;
-    protected static DesiredCapabilities capabilities;
+    public DesiredCapabilities capabilities;
 
-    public static Map<String, WebDriverProcess> webDriverMap() {
+    public Map<String, WebDriverProcess> webDriverMap() {
         return new HashMap<String, WebDriverProcess>() {{
 
             put(WebDriverName.FIREFOX.name(), nameDriver -> {

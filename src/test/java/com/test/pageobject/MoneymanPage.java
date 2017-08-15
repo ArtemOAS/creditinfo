@@ -105,25 +105,25 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
 
     }
 
-    private void writeDataToDB(Data data, Data dataCompany){
-        if (!dataBaseBL.findAll().contains(data)){
+    private void writeDataToDB(Data data, Data dataCompany) {
+        if (!dataBaseBL.findAll().contains(data)) {
             dataBaseBL.addNewData(data);
         }
-        if (!dataBaseBL.findAll().isEmpty() && dataBaseBL.findDataCredit(dataCompany).contains(dataCompany)
-                &&!dataBaseBL.findAll().contains(data)) {
+        if (!dataBaseBL.findAll().isEmpty() && dataBaseBL.findDataCredit(dataCompany).get(0).equals(dataCompany)
+                && !dataBaseBL.findAll().contains(data)) {
 
             for (Data dataRes : dataBaseBL.findAll()) {
                 String res = dataRes.getOldPercentSum();
                 if (dataRes.getOldPercentSum() != null && !res.equals(data.getOldPercentSum())) {
                     dataBaseBL.updateDataCredit(data);
 
-                    int differencePercentsum=0;
+                    int differencePercentsum = 0;
                     if (Integer.parseInt(dataRes.getOldPercentSum())
                             > Integer.parseInt(data.getOldPercentSum())) {
                         differencePercentsum =
                                 Integer.parseInt(dataRes.getOldPercentSum())
                                         - Integer.parseInt(data.getOldPercentSum());
-                    }else {
+                    } else {
                         differencePercentsum =
                                 Integer.parseInt(data.getOldPercentSum())
                                         - Integer.parseInt(dataRes.getOldPercentSum());
@@ -139,26 +139,25 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
                 }
             }
         } else {
-            for (Data dataCompanyRes : dataBaseBL.findDataCredit(dataCompany)) {
-                if (dataCompanyRes != null && dataCompanyRes.equals(dataCompany)) {
-                    dataBaseBL.updateDataNewPercentSum(
-                            new Data(d -> {
-                                d.setOldPercentSum(data.getOldPercentSum());
-                                d.setNameCompany(dataCompany.getNameCompany());
-                                d.setSumCredit(dataCompany.getSumCredit());
-                                d.setPeriodCredit(dataCompany.getPeriodCredit());
-                            })
-                    );
+            Data dataCompanyRes = dataBaseBL.findDataCredit(dataCompany).get(0);
+            if (dataCompanyRes != null && dataCompanyRes.equals(dataCompany)) {
+                dataBaseBL.updateDataNewPercentSum(
+                        new Data(d -> {
+                            d.setNewPercentSum(data.getOldPercentSum());
+                            d.setNameCompany(dataCompany.getNameCompany());
+                            d.setSumCredit(dataCompany.getSumCredit());
+                            d.setPeriodCredit(dataCompany.getPeriodCredit());
+                        })
+                );
 
-                    dataBaseBL.updateDataDiffSum(
-                            new Data(d -> {
-                                d.setDifferencePercentSum(String.valueOf(0));
-                                d.setNameCompany(dataCompany.getNameCompany());
-                                d.setSumCredit(dataCompany.getSumCredit());
-                                d.setPeriodCredit(dataCompany.getPeriodCredit());
-                            })
-                    );
-                }
+                dataBaseBL.updateDataDiffSum(
+                        new Data(d -> {
+                            d.setDifferencePercentSum(String.valueOf(0));
+                            d.setNameCompany(dataCompany.getNameCompany());
+                            d.setSumCredit(dataCompany.getSumCredit());
+                            d.setPeriodCredit(dataCompany.getPeriodCredit());
+                        })
+                );
             }
         }
     }

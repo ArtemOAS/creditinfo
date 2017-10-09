@@ -24,7 +24,7 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
     @Autowired
     private WebDriverFactory webDriverFactory;
 
-    @Qualifier("bl")
+    @Qualifier("test_bl")
     @Autowired
     private CreditInfoDao dataBaseBL;
 

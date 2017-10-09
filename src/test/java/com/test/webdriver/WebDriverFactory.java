@@ -1,12 +1,10 @@
 package com.test.webdriver;
 
+import org.junit.After;
+import org.junit.Before;
 import org.openqa.selenium.WebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import ru.stqa.selenium.factory.WebDriverPool;
 
 import java.util.concurrent.TimeUnit;
@@ -17,7 +15,7 @@ public class WebDriverFactory {
     @Autowired
     private WebDriverCapabilities webDriverCapabilities;
 
-    @BeforeTest
+    @Before
     public WebDriver getDriver(){
         WebDriver driver;
 
@@ -32,7 +30,7 @@ public class WebDriverFactory {
         return driver;
     }
 
-    @AfterTest
+    @After
     public void closeDriver(){
         if (getDriver() != null && !getDriver().getWindowHandles().isEmpty()){
             WebDriverPool.DEFAULT.dismissAll();

@@ -15,8 +15,8 @@ import java.util.List;
  * Created by Artem on 19.07.2017.
  */
 
-@Repository("bl")
-public class DataBaseBL implements CreditInfoDao {
+@Repository("test_bl")
+public class DataBaseTestBL implements CreditInfoDao {
 
     @PersistenceContext
     private EntityManager entityManager;

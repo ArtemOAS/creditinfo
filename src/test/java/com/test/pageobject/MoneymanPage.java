@@ -1,6 +1,7 @@
 package com.test.pageobject;
 
 import com.dao.CreditInfoDao;
+import com.dao.impl.DataBaseBL;
 import com.entity.Data;
 import com.test.waitutils.WaitUtils;
 import com.test.webdriver.WebDriverFactory;
@@ -13,7 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Optional;
 
 @Component
 public class MoneymanPage implements CreditDataPage, WaitUtils {
@@ -96,10 +97,15 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
 
     private synchronized void writeDataToDB(Data data) {
         List<Data> dataList = dataBaseBL.findAll();
-        if (dataList.isEmpty() || !dataList.contains(data)) {
+        if (dataList.isEmpty() || !dataList.stream().map(d ->
+                d.getNameCompany().equals(data.getNameCompany()) &&
+                        d.getSumCredit().equals(data.getSumCredit()) &&
+                        d.getPeriodCredit().equals(data.getPeriodCredit())).findFirst().get()) {
             dataBaseBL.addNewData(data);
         } else {
-            Data dataResult = dataList.stream().filter(d -> !d.getOldPercentSum().equals(data.getOldPercentSum())).findFirst().get();
+            Data dataResult = dataList.stream().filter(d ->
+                    !d.getOldPercentSum().equals(data.getOldPercentSum())
+            ).findFirst().orElse(null);
             if (dataResult != null &&
                     !dataResult.getOldPercentSum().equals(data.getOldPercentSum()) &&
                     dataResult.getNameCompany().equals(data.getNameCompany()) &&

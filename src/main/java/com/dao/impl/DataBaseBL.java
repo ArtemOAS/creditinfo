@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -15,6 +16,7 @@ import java.util.List;
  * Created by Artem on 19.07.2017.
  */
 
+@Transactional
 @Repository("bl")
 public class DataBaseBL implements CreditInfoDao {
 
@@ -24,7 +26,26 @@ public class DataBaseBL implements CreditInfoDao {
     @Override
     @Transactional
     public List<Data> findAll() {
-        return entityManager.createNamedQuery("Data.getdAll", Data.class).getResultList();
+        List<Data> dataList = new ArrayList<>();
+        for (Object data : entityManager
+                .createQuery("select c.nameCompany, c.sumCredit, c.periodCredit, c.oldPercentSum, " +
+                        "c.newPercentSum, c.differencePercentSum from Data c").getResultList()) {
+            List<String> arrayResult = new ArrayList<>();
+            for (int index = 0; index < ((Object[])data).length; index++){
+                arrayResult.add((String) ((Object[])data)[index]);
+            }
+            dataList.add(new Data(d -> {
+                d.setNameCompany(arrayResult.get(0));
+                d.setSumCredit(arrayResult.get(1));
+                d.setPeriodCredit(arrayResult.get(2));
+                d.setOldPercentSum(arrayResult.get(3));
+                d.setNewPercentSum(arrayResult.get(4));
+                d.setDifferencePercentSum(arrayResult.get(5));
+            }));
+
+        }
+        return dataList;
+
     }
 
     @Override
@@ -47,39 +68,63 @@ public class DataBaseBL implements CreditInfoDao {
 
     @Override
     @Transactional
-    public List<Data> findDataCredit(Data data) {
-        return entityManager.createQuery(
+    public Data findDataCredit(Data data) {
+        Data dataResult = entityManager.createQuery(
                 "SELECT c FROM Data c WHERE " +
                         "c.nameCompany = ?1 and " +
                         "c.sumCredit = ?2 and " +
-                        "c.periodCredit = ?3")
-                .setParameter(1,data.getNameCompany())
-                .setParameter(2,data.getSumCredit())
-                .setParameter(3,data.getPeriodCredit())
-                .getResultList();
+                        "c.periodCredit = ?3 and " +
+                        "c.oldPercentSum = ?4", Data.class)
+                .setParameter(1, data.getNameCompany())
+                .setParameter(2, data.getSumCredit())
+                .setParameter(3, data.getPeriodCredit())
+                .setParameter(4, data.getOldPercentSum())
+                .getSingleResult();
+        return new Data(d -> {
+           d.setNameCompany(dataResult.getNameCompany());
+           d.setSumCredit(dataResult.getSumCredit());
+           d.setPeriodCredit(dataResult.getPeriodCredit());
+           d.setOldPercentSum(dataResult.getOldPercentSum());
+        });
+    }
+
+    @Override
+    @Transactional
+    public Data findFullDataCredit(Data data) {
+        return (Data) entityManager.createQuery(
+                "SELECT c FROM Data c WHERE " +
+                        "c.nameCompany = ?1 and " +
+                        "c.sumCredit = ?2 and " +
+                        "c.periodCredit = ?3 and " +
+                        "c.oldPercentSum = ?4")
+                .setParameter(1, data.getNameCompany())
+                .setParameter(2, data.getSumCredit())
+                .setParameter(3, data.getPeriodCredit())
+                .setParameter(4, data.getOldPercentSum())
+                .getSingleResult();
     }
 
     @Override
     @Transactional
     public void updateDataNewPercentSum(Data data) {
         entityManager.createQuery(
-                "UPDATE vinnik_credit.creditinfo " +
-                        "SET new_percent_sum =?1 where name_company = ?2 and sum_credit = ?3 and period_credit = ?4;")
-                .setParameter(1,data.getNewPercentSum())
-                .setParameter(2,data.getNameCompany())
-                .setParameter(3,data.getSumCredit())
-                .setParameter(4,data.getPeriodCredit());
+                "UPDATE Data d " +
+                        "SET d.newPercentSum =?1 where d.nameCompany = ?2 and d.sumCredit = ?3 and d.periodCredit = ?4")
+                .setParameter(1, data.getNewPercentSum())
+                .setParameter(2, data.getNameCompany())
+                .setParameter(3, data.getSumCredit())
+                .setParameter(4, data.getPeriodCredit()).executeUpdate();
     }
 
     @Override
     @Transactional
     public void updateDataDiffSum(Data data) {
         entityManager.createQuery(
-                "UPDATE vinnik_credit.creditinfo " +
-                        "SET difference_percent_sum = ?1 where name_company = ?2 and sum_credit = ?3 and period_credit = ?4;")
-                .setParameter(1,data.getDifferencePercentSum())
-                .setParameter(2,data.getNameCompany())
-                .setParameter(3,data.getSumCredit())
-                .setParameter(4,data.getPeriodCredit());
+                "UPDATE Data d " +
+                        "SET d.differencePercentSum = ?1 where d.nameCompany = ?2 and d.sumCredit = ?3 and d.periodCredit = ?4")
+                .setParameter(1, data.getDifferencePercentSum())
+                .setParameter(2, data.getNameCompany())
+                .setParameter(3, data.getSumCredit())
+                .setParameter(4, data.getPeriodCredit()).executeUpdate();
     }
 }

@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
-/**
- * Created by Artem on 12.05.2017.
- */
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class MoneymanPage implements CreditDataPage, WaitUtils {
@@ -30,13 +27,12 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
 
     @Override
     public void saveSum() {
+        String sumWithPercentPath = "//div[@class='mainCalculator__info__col mainCalculatorInfo__col_3 new']//div[@class='mainCalculator__info__data_default']//span[@class='mainCalculator__info__value']";
         WebElement sum = webDriverFactory.getDriver().findElement(By.id("money"));
         WebElement period = webDriverFactory.getDriver().findElement(By.id("days"));
-        List<WebElement> minSumAndPeriod = webDriverFactory.getDriver().findElements(By.xpath("//span[@class='mainCalculatorLabel__min mainCalculator__label__value']"));
-        List<WebElement> maxSumAndPeriod = webDriverFactory.getDriver().findElements(By.xpath("//span[@class='mainCalculatorLabel__max mainCalculator__label__value']"));
-        List<WebElement> infoAboutCredit = webDriverFactory.getDriver().findElements(By.xpath("//span[@class='mainCalculator__info__value']"));
-        List<WebElement> dataSign = webDriverFactory.getDriver().findElements(By.xpath("//span[@class='mainCalculator__info__label']"));
-
+        List<WebElement> minSumAndPeriod = webDriverFactory.getDriver().findElements(By.xpath(".//span[@class='mainCalculatorLabel__min mainCalculator__label__value']"));
+        List<WebElement> infoAboutCredit = webDriverFactory.getDriver().findElements(By.xpath(".//span[@class='mainCalculator__info__value']"));
+        WebElement sumWithPercent = webDriverFactory.getDriver().findElement(By.xpath(sumWithPercentPath));
         int maxSum = 30000;
         int maxPeriod = 30;
 
@@ -51,23 +47,20 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
                 period.sendKeys(String.valueOf(minPeriod));
                 infoAboutCredit.get(0).click();
 
-                waitFor(infoAboutCredit.get(2), ExpectedConditions::visibilityOf);
-                System.out.println(sum.getAttribute("value") + "-" + period.getAttribute("value") + "дней : " + infoAboutCredit.get(2).getText());
+                waitFor(By.xpath(sumWithPercentPath), ExpectedConditions::presenceOfElementLocated);
+                int percent = ((Integer.parseInt(sumWithPercent.getAttribute("innerText").replaceAll(" ", "")) * 100) / Integer.parseInt(sum.getAttribute("value").replaceAll(" ", ""))) - 100;
+                System.out.println(sum.getAttribute("value") + "-" + period.getAttribute("value") + "дней : " + percent);
 
                 Data data = new Data(d -> {
-                    d.setNameCompany(webDriverFactory.getDriver().getCurrentUrl().replace("https:", "").replace(".ru", "").replaceAll("/", ""));
-                    d.setSumCredit(sum.getAttribute("value"));
-                    d.setPeriodCredit(period.getAttribute("value"));
-                    d.setOldPercentSum(infoAboutCredit.get(2).getText().replace(" ", ""));
+                    d.setNameCompany(webDriverFactory.getDriver().getCurrentUrl().replaceAll("https:", "").replace(".ru", "").replaceAll("/", ""));
+                    d.setSumCredit(sum.getAttribute("value").replaceAll(" ", ""));
+                    d.setPeriodCredit(period.getAttribute("value").replaceAll(" ", ""));
+                    d.setOldPercentSum(String.valueOf(percent).replaceAll(" ", ""));
+                    d.setNewPercentSum("0");
+                    d.setDifferencePercentSum("0");
                 });
 
-                Data dataCompany = new Data(d -> {
-                    d.setNameCompany(webDriverFactory.getDriver().getCurrentUrl().replace("https:", "").replace(".ru", "").replaceAll("/", ""));
-                    d.setSumCredit(sum.getAttribute("value"));
-                    d.setPeriodCredit(period.getAttribute("value"));
-                });
-
-                writeDataToDB(data, dataCompany);
+                writeDataToDB(data);
             }
         }
 
@@ -83,86 +76,73 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
                 period.sendKeys(String.valueOf(minPeriod));
                 infoAboutCredit.get(1).click();
 
-                waitFor(infoAboutCredit.get(3), ExpectedConditions::visibilityOf);
-                int res = (minPeriod / 2) * Integer.parseInt(infoAboutCredit.get(3).getText().replace(" ", "")) - Integer.parseInt(infoAboutCredit.get(0).getText().replace(" ", ""));
+                waitFor(By.xpath(sumWithPercentPath), ExpectedConditions::presenceOfElementLocated);
+                int res = (minPeriod / 2) * Integer.parseInt(sumWithPercent.getAttribute("innerText").replaceAll(" ", "")) - Integer.parseInt(infoAboutCredit.get(0).getText().replace(" ", ""));
 
                 Data data = new Data(d -> {
                     d.setNameCompany(webDriverFactory.getDriver().getCurrentUrl().replace("https:", "").replace(".ru", "").replaceAll("/", ""));
-                    d.setSumCredit(sum.getAttribute("value"));
-                    d.setPeriodCredit(period.getAttribute("value"));
-                    d.setOldPercentSum(String.valueOf(res));
+                    d.setSumCredit(sum.getAttribute("value").replaceAll(" ", ""));
+                    d.setPeriodCredit(period.getAttribute("value").replaceAll(" ", ""));
+                    d.setOldPercentSum(String.valueOf(res).replaceAll(" ", ""));
+                    d.setNewPercentSum("0");
+                    d.setDifferencePercentSum("0");
                 });
 
-                Data dataCompany = new Data(d -> {
-                    d.setNameCompany(webDriverFactory.getDriver().getCurrentUrl().replace("https:", "").replace(".ru", "").replaceAll("/", ""));
-                    d.setSumCredit(sum.getAttribute("value"));
-                    d.setPeriodCredit(period.getAttribute("value"));
-                });
-
-                writeDataToDB(data, dataCompany);
+                writeDataToDB(data);
             }
         }
 
     }
 
-    private void writeDataToDB(Data data, Data dataCompany) {
-        if (!dataBaseBL.findAll().contains(data)) {
+    private synchronized void writeDataToDB(Data data) {
+        List<Data> dataList = dataBaseBL.findAll();
+        if (dataList.isEmpty() || !dataList.contains(data)) {
             dataBaseBL.addNewData(data);
-        }
-        if (!dataBaseBL.findAll().isEmpty() && dataBaseBL.findDataCredit(dataCompany).get(0).equals(dataCompany)
-                && !dataBaseBL.findAll().contains(data)) {
-
-            for (Data dataRes : dataBaseBL.findAll()) {
-                String res = dataRes.getOldPercentSum();
-                if (dataRes.getOldPercentSum() != null && !res.equals(data.getOldPercentSum())) {
-                    dataBaseBL.updateDataCredit(data);
-
-                    int differencePercentsum = 0;
-                    if (Integer.parseInt(dataRes.getOldPercentSum())
-                            > Integer.parseInt(data.getOldPercentSum())) {
-                        differencePercentsum =
-                                Integer.parseInt(dataRes.getOldPercentSum())
-                                        - Integer.parseInt(data.getOldPercentSum());
-                    } else {
-                        differencePercentsum =
-                                Integer.parseInt(data.getOldPercentSum())
-                                        - Integer.parseInt(dataRes.getOldPercentSum());
-                    }
-
-                    int finalDifferencePercentsum = differencePercentsum;
-                    dataBaseBL.updateDataCredit(new Data(d -> {
-                        d.setDifferencePercentSum(String.valueOf(finalDifferencePercentsum));
-                        d.setNameCompany(data.getNameCompany());
-                        d.setSumCredit(data.getSumCredit());
-                        d.setPeriodCredit(data.getPeriodCredit());
-                    }));
-                }
-            }
         } else {
-            Data dataCompanyRes = dataBaseBL.findDataCredit(dataCompany).get(0);
-            if (dataCompanyRes != null && dataCompanyRes.equals(dataCompany)) {
+            Data dataResult = dataList.stream().filter(d -> !d.getOldPercentSum().equals(data.getOldPercentSum())).findFirst().get();
+            if (dataResult != null &&
+                    !dataResult.getOldPercentSum().equals(data.getOldPercentSum()) &&
+                    dataResult.getNameCompany().equals(data.getNameCompany()) &&
+                    dataResult.getSumCredit().equals(data.getSumCredit()) &&
+                    dataResult.getPeriodCredit().equals(data.getPeriodCredit())) {
+                dataBaseBL.updateDataCredit(new Data(d -> {
+                    d.setDifferencePercentSum(differencePercentSum(dataResult.getOldPercentSum(), data.getOldPercentSum()));
+                    d.setNameCompany(data.getNameCompany());
+                    d.setSumCredit(data.getSumCredit());
+                    d.setPeriodCredit(data.getPeriodCredit());
+                    d.setNewPercentSum(data.getOldPercentSum());
+                    d.setOldPercentSum(dataResult.getOldPercentSum());
+                }));
+            } else {
                 dataBaseBL.updateDataNewPercentSum(
                         new Data(d -> {
                             d.setNewPercentSum(data.getOldPercentSum());
-                            d.setNameCompany(dataCompany.getNameCompany());
-                            d.setSumCredit(dataCompany.getSumCredit());
-                            d.setPeriodCredit(dataCompany.getPeriodCredit());
-                        })
-                );
-
-                dataBaseBL.updateDataDiffSum(
-                        new Data(d -> {
-                            d.setDifferencePercentSum(String.valueOf(0));
-                            d.setNameCompany(dataCompany.getNameCompany());
-                            d.setSumCredit(dataCompany.getSumCredit());
-                            d.setPeriodCredit(dataCompany.getPeriodCredit());
+                            d.setNameCompany(data.getNameCompany());
+                            d.setSumCredit(data.getSumCredit());
+                            d.setPeriodCredit(data.getPeriodCredit());
                         })
                 );
             }
         }
     }
 
-    private Integer value(List<WebElement> elements, int position) {
+    private String differencePercentSum(String oldPercentSumExpected, String oldPercentSumActual) {
+        int differencePercentsum = 0;
+        if (Integer.parseInt(oldPercentSumExpected)
+                > Integer.parseInt(oldPercentSumActual)) {
+            differencePercentsum =
+                    Integer.parseInt(oldPercentSumExpected)
+                            - Integer.parseInt(oldPercentSumActual);
+        } else if (Integer.parseInt(oldPercentSumExpected)
+                < Integer.parseInt(oldPercentSumActual)) {
+            differencePercentsum =
+                    Integer.parseInt(oldPercentSumActual)
+                            - Integer.parseInt(oldPercentSumExpected);
+        }
+        return String.valueOf(differencePercentsum);
+    }
+
+    private Integer value(List<WebElement> elements, Integer position) {
         waitFor(elements.get(position), ExpectedConditions::visibilityOf);
         return Integer.parseInt(elements.get(position).getText().replace(" ", ""));
     }

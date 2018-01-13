@@ -40,7 +40,12 @@ public class CreditInfoDaoImpl implements CreditInfoDao {
     }
 
     @Override
-    public List <Data> findDataCredit(Data data) {
+    public Data findDataCredit(Data data) {
+        return null;
+    }
+
+    @Override
+    public Data findFullDataCredit(Data data) {
         return null;
     }
 

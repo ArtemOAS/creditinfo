@@ -1,5 +1,6 @@
 package com.test.waitutils;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -18,6 +19,10 @@ public interface WaitUtils {
 
     default void waitFor(WebElement element, Function<WebElement, ExpectedCondition<?>> con){
         new WebDriverWait(getDriver(),DEFAULT_WAIT).until(con.apply(element));
+    }
+
+    default void waitFor(By by, Function<By, ExpectedCondition<?>> con){
+        new WebDriverWait(getDriver(),DEFAULT_WAIT).until(con.apply(by));
     }
 
     default void waitFor(List<WebElement> elements, Function<List<WebElement>, ExpectedCondition<?>> con){

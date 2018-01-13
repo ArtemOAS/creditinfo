@@ -1,6 +1,7 @@
 package com.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.function.Consumer;
 
 /**
@@ -9,7 +10,7 @@ import java.util.function.Consumer;
 @Entity
 @Table(name = "creditinfo")
 @NamedQuery(name = "Data.getdAll", query = "FROM Data c")
-public class Data {
+public class Data implements Serializable{
 
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private String id;

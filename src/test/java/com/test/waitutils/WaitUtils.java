@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 /**
@@ -27,6 +28,14 @@ public interface WaitUtils {
 
     default void waitFor(List<WebElement> elements, Function<List<WebElement>, ExpectedCondition<?>> con){
         new WebDriverWait(getDriver(),DEFAULT_WAIT).until(con.apply(elements));
+    }
+
+    default void sleepThread(Integer longTimeInSecond){
+        try {
+            TimeUnit.SECONDS.sleep(longTimeInSecond);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

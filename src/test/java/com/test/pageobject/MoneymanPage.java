@@ -1,7 +1,6 @@
 package com.test.pageobject;
 
 import com.dao.CreditInfoDao;
-import com.dao.impl.DataBaseBL;
 import com.entity.Data;
 import com.test.waitutils.WaitUtils;
 import com.test.webdriver.WebDriverFactory;
@@ -13,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class MoneymanPage implements CreditDataPage, WaitUtils {
@@ -97,20 +96,29 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
 
     private synchronized void writeDataToDB(Data data) {
         List<Data> dataList = dataBaseBL.findAll();
-        if (dataList.isEmpty() || !dataList.stream().map(d ->
-                d.getNameCompany().equals(data.getNameCompany()) &&
-                        d.getSumCredit().equals(data.getSumCredit()) &&
-                        d.getPeriodCredit().equals(data.getPeriodCredit())).findFirst().get()) {
+        boolean dataRes = false;
+        for (Data d : dataList){
+            if (new Data(dataExpected -> {
+                dataExpected.setNameCompany(d.getNameCompany());
+                dataExpected.setSumCredit(d.getSumCredit());
+                dataExpected.setPeriodCredit(d.getPeriodCredit());
+            }).equals(new Data(dataActual -> {
+                dataActual.setNameCompany(data.getNameCompany());
+                dataActual.setSumCredit(data.getSumCredit());
+                dataActual.setPeriodCredit(data.getPeriodCredit());
+            })))
+                dataRes = true;
+        }
+        if (dataList.isEmpty() || !dataRes) {
             dataBaseBL.addNewData(data);
         } else {
             Data dataResult = dataList.stream().filter(d ->
-                    !d.getOldPercentSum().equals(data.getOldPercentSum())
+                    !d.getOldPercentSum().equals(data.getOldPercentSum()) &&
+                            d.getNameCompany().equals(data.getNameCompany()) &&
+                            d.getSumCredit().equals(data.getSumCredit()) &&
+                            d.getPeriodCredit().equals(data.getPeriodCredit())
             ).findFirst().orElse(null);
-            if (dataResult != null &&
-                    !dataResult.getOldPercentSum().equals(data.getOldPercentSum()) &&
-                    dataResult.getNameCompany().equals(data.getNameCompany()) &&
-                    dataResult.getSumCredit().equals(data.getSumCredit()) &&
-                    dataResult.getPeriodCredit().equals(data.getPeriodCredit())) {
+            if (dataResult != null) {
                 dataBaseBL.updateDataCredit(new Data(d -> {
                     d.setDifferencePercentSum(differencePercentSum(dataResult.getOldPercentSum(), data.getOldPercentSum()));
                     d.setNameCompany(data.getNameCompany());

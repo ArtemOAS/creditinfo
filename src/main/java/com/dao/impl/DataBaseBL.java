@@ -10,13 +10,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
  * Created by Artem on 19.07.2017.
  */
 
-@Transactional
 @Repository("bl")
 public class DataBaseBL implements CreditInfoDao {
 
@@ -26,25 +26,15 @@ public class DataBaseBL implements CreditInfoDao {
     @Override
     @Transactional
     public List<Data> findAll() {
-        List<Data> dataList = new ArrayList<>();
-        for (Object data : entityManager
-                .createQuery("select c.nameCompany, c.sumCredit, c.periodCredit, c.oldPercentSum, " +
-                        "c.newPercentSum, c.differencePercentSum from Data c").getResultList()) {
-            List<String> arrayResult = new ArrayList<>();
-            for (int index = 0; index < ((Object[])data).length; index++){
-                arrayResult.add((String) ((Object[])data)[index]);
-            }
-            dataList.add(new Data(d -> {
-                d.setNameCompany(arrayResult.get(0));
-                d.setSumCredit(arrayResult.get(1));
-                d.setPeriodCredit(arrayResult.get(2));
-                d.setOldPercentSum(arrayResult.get(3));
-                d.setNewPercentSum(arrayResult.get(4));
-                d.setDifferencePercentSum(arrayResult.get(5));
-            }));
-
-        }
-        return dataList;
+        List<Data> list = entityManager.createNamedQuery("Data.getdAll", Data.class).getResultList();
+        return list.stream().map(arrayResult -> new Data(d -> {
+            d.setNameCompany(arrayResult.getNameCompany());
+            d.setSumCredit(arrayResult.getSumCredit());
+            d.setPeriodCredit(arrayResult.getPeriodCredit());
+            d.setOldPercentSum(arrayResult.getOldPercentSum());
+            d.setNewPercentSum(arrayResult.getNewPercentSum());
+            d.setDifferencePercentSum(arrayResult.getDifferencePercentSum());
+        })).collect(Collectors.toList());
 
     }
 

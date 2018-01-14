@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Component
 public class MoneymanPage implements CreditDataPage, WaitUtils {
@@ -94,22 +96,15 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
 
     }
 
-    private synchronized void writeDataToDB(Data data) {
+    private void writeDataToDB(Data data) {
         List<Data> dataList = dataBaseBL.findAll();
-        boolean dataRes = false;
-        for (Data d : dataList){
-            if (new Data(dataExpected -> {
-                dataExpected.setNameCompany(d.getNameCompany());
-                dataExpected.setSumCredit(d.getSumCredit());
-                dataExpected.setPeriodCredit(d.getPeriodCredit());
-            }).equals(new Data(dataActual -> {
-                dataActual.setNameCompany(data.getNameCompany());
-                dataActual.setSumCredit(data.getSumCredit());
-                dataActual.setPeriodCredit(data.getPeriodCredit());
-            })))
-                dataRes = true;
-        }
-        if (dataList.isEmpty() || !dataRes) {
+
+        Optional<Data> dataRes = dataList.stream().filter(d ->
+                d.getNameCompany().equals(data.getNameCompany()) &&
+                        d.getSumCredit().equals(data.getSumCredit()) &&
+                        d.getPeriodCredit().equals(data.getPeriodCredit())).findFirst();
+
+        if (dataList.isEmpty() || !dataRes.isPresent()) {
             dataBaseBL.addNewData(data);
         } else {
             Data dataResult = dataList.stream().filter(d ->

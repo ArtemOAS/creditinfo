@@ -29,6 +29,7 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
 
     @Override
     public void saveSum() {
+        String moneyMan = "moneyman";
         String sumWithPercentPath = "//div[@class='mainCalculator__info__col mainCalculatorInfo__col_3 new']//div[@class='mainCalculator__info__data_default']//span[@class='mainCalculator__info__value']";
         WebElement sum = webDriverFactory.getDriver().findElement(By.xpath("//input[@id='money']"));
         WebElement period = webDriverFactory.getDriver().findElement(By.id("days"));
@@ -54,7 +55,7 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
                 System.out.println(sum.getAttribute("value") + "-" + period.getAttribute("value") + "дней : " + percent);
 
                 Data data = new Data(d -> {
-                    d.setNameCompany(webDriverFactory.getDriver().getCurrentUrl().replaceAll("https:", "").replace(".ru", "").replaceAll("/", ""));
+                    d.setNameCompany(moneyMan);
                     d.setSumCredit(sum.getAttribute("value").replaceAll(" ", ""));
                     d.setPeriodCredit(period.getAttribute("value").replaceAll(" ", ""));
                     d.setOldPercentSum(String.valueOf(percent).replaceAll(" ", ""));
@@ -82,7 +83,7 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
                 int res = (minPeriod / 2) * Integer.parseInt(sumWithPercent.getAttribute("innerText").replaceAll(" ", "")) - Integer.parseInt(infoAboutCredit.get(0).getText().replace(" ", ""));
 
                 Data data = new Data(d -> {
-                    d.setNameCompany(webDriverFactory.getDriver().getCurrentUrl().replace("https:", "").replace(".ru", "").replaceAll("/", ""));
+                    d.setNameCompany(moneyMan);
                     d.setSumCredit(sum.getAttribute("value").replaceAll(" ", ""));
                     d.setPeriodCredit(period.getAttribute("value").replaceAll(" ", ""));
                     d.setOldPercentSum(String.valueOf(res).replaceAll(" ", ""));

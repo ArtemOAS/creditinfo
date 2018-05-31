@@ -30,7 +30,7 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
     @Override
     public void saveSum() {
         String sumWithPercentPath = "//div[@class='mainCalculator__info__col mainCalculatorInfo__col_3 new']//div[@class='mainCalculator__info__data_default']//span[@class='mainCalculator__info__value']";
-        WebElement sum = webDriverFactory.getDriver().findElement(By.id("money"));
+        WebElement sum = webDriverFactory.getDriver().findElement(By.xpath("//input[@id='money']"));
         WebElement period = webDriverFactory.getDriver().findElement(By.id("days"));
         List<WebElement> minSumAndPeriod = webDriverFactory.getDriver().findElements(By.xpath(".//span[@class='mainCalculatorLabel__min mainCalculator__label__value']"));
         List<WebElement> infoAboutCredit = webDriverFactory.getDriver().findElements(By.xpath(".//span[@class='mainCalculator__info__value']"));

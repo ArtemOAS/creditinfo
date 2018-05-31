@@ -18,8 +18,6 @@ public class WebDriverFactory {
     @Before
     public WebDriver getDriver(){
         WebDriver driver;
-
-        System.setProperty("webdriver.gecko.driver", "src/main/resources/drivers/geckodriver.exe");
         System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
 
         webDriverCapabilities.webDriverMap().get(WebDriverName.CHROME.name()).setupDriver(WebDriverName.CHROME.name());

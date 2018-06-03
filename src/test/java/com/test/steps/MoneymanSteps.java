@@ -1,8 +1,8 @@
 package com.test.steps;
 
-import com.test.utils.fileutils.FileData;
-import com.test.utils.fileutils.TestData;
 import com.test.pageobject.MoneymanPage;
+import com.test.utils.fileutils.FileData;
+import com.test.utils.fileutils.FilesTestData;
 import com.test.webdriver.WebDriverFactory;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class MoneymanSteps {
     private  MoneymanPage moneymanPage;
 
     @Autowired
-    private TestData testData;
+    private FilesTestData testData;
 
     @Test
     public void moneymanDataCredit(){

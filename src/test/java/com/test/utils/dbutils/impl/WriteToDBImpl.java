@@ -20,6 +20,7 @@ public class WriteToDBImpl implements WriteToDB {
     @Autowired
     private CreditInfoDao dataBaseBL;
 
+    @Override
     public void writeDataToDB(Data data) {
         List<Data> dataList = dataBaseBL.findAll();
 

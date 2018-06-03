@@ -1,16 +1,19 @@
-package com.test.utils.fileutils;
+package com.test.utils.fileutils.impl;
 
-import org.springframework.stereotype.Component;
+import com.test.utils.fileutils.FilesTestData;
+import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
  * Created by Artem on 30.05.2018.
  */
-@Component
-public class TestData {
+@Service
+public class FilesTestDataImpl implements FilesTestData {
 
+    @Override
     public String getFileData(String data){
         Properties appProps = new Properties();
         try {

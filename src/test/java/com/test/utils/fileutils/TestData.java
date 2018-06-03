@@ -1,11 +1,8 @@
-package com.test.fileutils;
+package com.test.utils.fileutils;
 
-import org.apache.catalina.Session;
-import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.util.List;
 import java.util.Properties;
 
 /**

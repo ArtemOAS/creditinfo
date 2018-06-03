@@ -1,7 +1,7 @@
 package com.test.steps;
 
-import com.test.fileutils.FileData;
-import com.test.fileutils.TestData;
+import com.test.utils.fileutils.FileData;
+import com.test.utils.fileutils.TestData;
 import com.test.pageobject.MoneymanPage;
 import com.test.webdriver.WebDriverFactory;
 import org.apache.log4j.Logger;

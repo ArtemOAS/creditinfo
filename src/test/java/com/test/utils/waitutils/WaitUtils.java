@@ -1,4 +1,4 @@
-package com.test.waitutils;
+package com.test.utils.waitutils;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

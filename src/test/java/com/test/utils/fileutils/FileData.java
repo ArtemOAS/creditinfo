@@ -1,4 +1,4 @@
-package com.test.fileutils;
+package com.test.utils.fileutils;
 
 /**
  * Created by Artem on 30.05.2018.

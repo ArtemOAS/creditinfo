@@ -1,6 +1,5 @@
 package com.test.pageobject;
 
-import com.dao.CreditInfoDao;
 import com.entity.Data;
 import com.test.utils.dbutils.WriteToDB;
 import com.test.utils.waitutils.WaitUtils;
@@ -11,11 +10,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class MoneymanPage implements CreditDataPage, WaitUtils {
@@ -77,7 +74,7 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
     private String getTextWS(String text){
         return text.replaceAll(StringUtils.SPACE, StringUtils.EMPTY);
     }
-    
+
     private Integer value(List<WebElement> elements, Integer position) {
         waitFor(elements.get(position), ExpectedConditions::visibilityOf);
         return Integer.parseInt(elements.get(position).getText().replace(" ", ""));

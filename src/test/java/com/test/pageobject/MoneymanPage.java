@@ -36,7 +36,7 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
         List<WebElement> minSumAndPeriod = webDriverFactory.getDriver().findElements(By.xpath(".//span[@class='mainCalculatorLabel__min mainCalculator__label__value']"));
         List<WebElement> infoAboutCredit = webDriverFactory.getDriver().findElements(By.xpath(".//span[@class='mainCalculator__info__value']"));
         WebElement sumWithPercent = webDriverFactory.getDriver().findElement(By.xpath(sumWithPercentPath));
-        int maxSum = 30000;
+        int maxSum = 10000;
         int maxPeriod = 30;
 
         for (int minSum = value(minSumAndPeriod, 0); minSum < maxSum; minSum += 500) {
@@ -51,7 +51,7 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
                 infoAboutCredit.get(0).click();
 
                 waitFor(By.xpath(sumWithPercentPath), ExpectedConditions::presenceOfElementLocated);
-                int percent = ((Integer.parseInt(sumWithPercent.getAttribute("innerText").replaceAll(" ", "")) * 100) / Integer.parseInt(sum.getAttribute("value").replaceAll(" ", ""))) - 100;
+                int percent = (((Integer.parseInt(sumWithPercent.getAttribute("innerText").replaceAll(" ", ""))+104) * 100) / Integer.parseInt(sum.getAttribute("value").replaceAll(" ", ""))) - 100;
                 System.out.println(sum.getAttribute("value") + "-" + period.getAttribute("value") + "дней : " + percent);
 
                 Data data = new Data(d -> {
@@ -67,33 +67,33 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
             }
         }
 
-        for (int minSum = 30500; minSum < 70000; minSum += 500) {
-            waitFor(sum, ExpectedConditions::visibilityOf);
-            sum.clear();
-            sum.sendKeys(String.valueOf(minSum));
-
-            for (int minPeriod = 11; minPeriod <= 19; minPeriod += 2) {
-                waitFor(period, ExpectedConditions::visibilityOf);
-                period.clear();
-                period.clear();
-                period.sendKeys(String.valueOf(minPeriod));
-                infoAboutCredit.get(1).click();
-
-                waitFor(By.xpath(sumWithPercentPath), ExpectedConditions::presenceOfElementLocated);
-                int res = (minPeriod / 2) * Integer.parseInt(sumWithPercent.getAttribute("innerText").replaceAll(" ", "")) - Integer.parseInt(infoAboutCredit.get(0).getText().replace(" ", ""));
-
-                Data data = new Data(d -> {
-                    d.setNameCompany(moneyMan);
-                    d.setSumCredit(sum.getAttribute("value").replaceAll(" ", ""));
-                    d.setPeriodCredit(period.getAttribute("value").replaceAll(" ", ""));
-                    d.setOldPercentSum(String.valueOf(res).replaceAll(" ", ""));
-                    d.setNewPercentSum("0");
-                    d.setDifferencePercentSum("0");
-                });
-
-                writeDataToDB(data);
-            }
-        }
+//        for (int minSum = 30500; minSum < 70000; minSum += 500) {
+//            waitFor(sum, ExpectedConditions::visibilityOf);
+//            sum.clear();
+//            sum.sendKeys(String.valueOf(minSum));
+//
+//            for (int minPeriod = 11; minPeriod <= 19; minPeriod += 2) {
+//                waitFor(period, ExpectedConditions::visibilityOf);
+//                period.clear();
+//                period.clear();
+//                period.sendKeys(String.valueOf(minPeriod));
+//                infoAboutCredit.get(1).click();
+//
+//                waitFor(By.xpath(sumWithPercentPath), ExpectedConditions::presenceOfElementLocated);
+//                int res = (minPeriod / 2) * Integer.parseInt(sumWithPercent.getAttribute("innerText").replaceAll(" ", "")) - Integer.parseInt(infoAboutCredit.get(0).getText().replace(" ", ""));
+//
+//                Data data = new Data(d -> {
+//                    d.setNameCompany(moneyMan);
+//                    d.setSumCredit(sum.getAttribute("value").replaceAll(" ", ""));
+//                    d.setPeriodCredit(period.getAttribute("value").replaceAll(" ", ""));
+//                    d.setOldPercentSum(String.valueOf(res).replaceAll(" ", ""));
+//                    d.setNewPercentSum("0");
+//                    d.setDifferencePercentSum("0");
+//                });
+//
+//                writeDataToDB(data);
+//            }
+//        }
 
     }
 

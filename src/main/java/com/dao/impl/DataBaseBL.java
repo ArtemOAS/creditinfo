@@ -53,7 +53,16 @@ public class DataBaseBL implements CreditInfoDao {
     @Override
     @Transactional
     public void updateDataCredit(Data data) {
-        entityManager.merge(data);
+        entityManager.createQuery(
+                "UPDATE Data d " +
+                        "SET d.newPercentSum =?1, d.oldPercentSum = ?5, d.differencePercentSum = ?6 where d.nameCompany = ?2 and d.sumCredit = ?3 and d.periodCredit = ?4")
+                .setParameter(1, data.getNewPercentSum())
+                .setParameter(2, data.getNameCompany())
+                .setParameter(3, data.getSumCredit())
+                .setParameter(4, data.getPeriodCredit())
+                .setParameter(5, data.getOldPercentSum())
+                .setParameter(6, data.getDifferencePercentSum())
+                .executeUpdate();
     }
 
     @Override

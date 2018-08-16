@@ -75,7 +75,7 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
         return text.replaceAll(StringUtils.SPACE, StringUtils.EMPTY);
     }
 
-    private Integer value(List<WebElement> elements, Integer position) {
+    private int value(List<WebElement> elements, Integer position) {
         waitFor(elements.get(position), ExpectedConditions::visibilityOf);
         return Integer.parseInt(elements.get(position).getText().replace(" ", ""));
     }

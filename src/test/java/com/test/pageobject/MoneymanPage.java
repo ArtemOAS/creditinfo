@@ -84,19 +84,21 @@ public class MoneymanPage implements CreditDataPage, WaitUtils {
     public WebDriver getDriver() {
         return webDriverFactory.getDriver();
     }
+
+    enum Attribute {
+        VALUE("value"), INNER_TEXT("innerText");
+
+        private String attribute;
+
+        Attribute(String attribute) {
+            this.attribute = attribute;
+        }
+
+        @Override
+        public String toString() {
+            return attribute;
+        }
+    }
 }
 
-enum Attribute {
-    VALUE("value"), INNER_TEXT("innerText");
 
-    private String attribute;
-
-    Attribute(String attribute) {
-        this.attribute = attribute;
-    }
-
-    @Override
-    public String toString() {
-        return attribute;
-    }
-}
